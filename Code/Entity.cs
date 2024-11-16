@@ -2,7 +2,7 @@ using Sandbox;
 using System;
 using System.Collections.Generic;
 namespace XentitySystem;
-public class Entity : IValid, IDisposable
+public class Entity : IValid, IDisposable//, ISoundParent: protected and cannot do :(
 {
 	public static List<Entity> All = new List<Entity>();
 	public virtual bool IsValid => true;
