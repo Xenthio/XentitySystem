@@ -10,7 +10,6 @@ public class Entity : GameObject
 	{
 		All.Add( this );
 		DummyComponent = Components.GetOrCreate<EntityDummyComponent>();
-		Spawn();
 	}
 	public virtual void InternalUpdate()
 	{

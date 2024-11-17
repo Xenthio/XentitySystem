@@ -37,7 +37,7 @@
   <PropertyGroup>
 	<OutputPath>E:\SteamLibrary\steamapps\common\sbox/.vs/output/</OutputPath>
 	<DocumentationFile>E:\SteamLibrary\steamapps\common\sbox/.vs/output/xentitysystem.editor.xml</DocumentationFile>
-	<RootNamespace>Sandbox</RootNamespace>
+	<RootNamespace>XentitySystem</RootNamespace>
 	<Nullable>disable</Nullable>
   </PropertyGroup>
 

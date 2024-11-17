@@ -2,22 +2,13 @@
 namespace XentitySystem;
 public class ModelEntity : Entity
 {
-	public SceneModel SceneModel { get; private set; }
-	public PhysicsBody PhysicsBody { get; private set; }
+	public SkinnedModelRenderer ModelRenderer { get; private set; }
+	public Rigidbody Rigidbody { get; private set; }
 
 	public void SetModel( Model model )
 	{
-		if ( SceneModel.IsValid() ) SceneModel.Model = model;
-		else
-		{
-			SceneModel = new SceneModel( Scene.SceneWorld, model, Transform.World );
-			SceneModel.SetComponentSource( DummyComponent );
-		}
-	}
-	public override void InternalUpdate()
-	{
-		SceneModel.Transform = Transform.World;
-		base.InternalUpdate();
+		ModelRenderer = Components.GetOrCreate<SkinnedModelRenderer>();
+		ModelRenderer.Model = model;
 	}
 	public enum SetupPhysicsMode
 	{
@@ -27,19 +18,17 @@ public class ModelEntity : Entity
 	}
 	public void SetupPhysicsFromModel( SetupPhysicsMode mode )
 	{
-		// Ignore mode for now
-		PhysicsBody = new PhysicsBody( Game.ActiveScene.PhysicsWorld );
-
-		foreach ( var part in SceneModel.Model.Physics.Parts )
+		if ( ModelRenderer.Model.Physics.Parts.Count > 1 )
 		{
-			foreach ( var hull in part.Hulls ) PhysicsBody.AddShape( hull, PhysicsBody.Transform.ToLocal( Transform.World ).ToWorld( part.Transform ) );
-			foreach ( var mesh in part.Meshes ) PhysicsBody.AddShape( mesh, PhysicsBody.Transform.ToLocal( Transform.World ).ToWorld( part.Transform ), false );
+			var modelPhysics = Components.GetOrCreate<ModelPhysics>();
+			modelPhysics.Model = ModelRenderer.Model;
+			modelPhysics.Renderer = ModelRenderer;
 		}
-	}
-	protected override void OnDestroyInternal()
-	{
-		base.OnDestroyInternal();
-		SceneModel?.Delete();
-		PhysicsBody?.Remove();
+		else
+		{
+			var modelCollider = Components.GetOrCreate<ModelCollider>();
+			modelCollider.Model = ModelRenderer.Model;
+			Rigidbody = Components.GetOrCreate<Rigidbody>();
+		}
 	}
 }

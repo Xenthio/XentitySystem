@@ -10,6 +10,7 @@ internal class EntityDummyComponent : Component
 		base.OnStart();
 		OwnerEntity = GameObject as Entity;
 		OwnerEntity.Name = GameObject.GetType().Name;
+		OwnerEntity.Spawn();
 	}
 	protected override void OnUpdate()
 	{
