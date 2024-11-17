@@ -2,3 +2,5 @@
 /Code/obj
 /Editor/obj
 /UnitTests/obj
+*.vtex_c
+*.vmat_c

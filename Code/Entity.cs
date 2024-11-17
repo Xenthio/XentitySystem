@@ -1,32 +1,40 @@
 using Sandbox;
-using System;
 using System.Collections.Generic;
 namespace XentitySystem;
-public class Entity : IValid, IDisposable//, ISoundParent: protected and cannot do :(
+public class Entity : GameObject
 {
 	public static List<Entity> All = new List<Entity>();
-	public virtual bool IsValid => true;
-	public GameTransform Transform { get; set; }
+	internal Component DummyComponent;
 
 	public Entity()
 	{
 		All.Add( this );
+		DummyComponent = Components.GetOrCreate<EntityDummyComponent>();
+		Spawn();
 	}
-	public void Dispose()
+	public virtual void InternalUpdate()
 	{
-		All.Remove( this );
-		OnDelete();
-		OnDeleteInternal();
 	}
-	public void Delete()
+	public virtual void InternalFixedUpdate()
 	{
-		Dispose();
 	}
-	protected virtual void OnDeleteInternal()
+
+	public virtual void Spawn()
 	{
 
 	}
-	protected virtual void OnDelete()
+	public override void Destroy()
+	{
+		base.Destroy();
+		All.Remove( this );
+		OnDestroy();
+		OnDestroyInternal();
+	}
+	protected virtual void OnDestroyInternal()
+	{
+
+	}
+	protected virtual void OnDestroy()
 	{
 	}
 }

@@ -5,20 +5,19 @@ public class ModelEntity : Entity
 	public SceneModel SceneModel { get; private set; }
 	public PhysicsBody PhysicsBody { get; private set; }
 
-	public override bool IsValid => SceneModel.IsValid() && PhysicsBody.IsValid();
-
-	public ModelEntity( SceneModel sceneModel )
-	{
-		SceneModel = sceneModel;
-	}
-
 	public void SetModel( Model model )
 	{
 		if ( SceneModel.IsValid() ) SceneModel.Model = model;
 		else
 		{
-			SceneModel = new SceneModel( Game.ActiveScene.SceneWorld, model, Transform.World );
+			SceneModel = new SceneModel( Scene.SceneWorld, model, Transform.World );
+			SceneModel.SetComponentSource( DummyComponent );
 		}
+	}
+	public override void InternalUpdate()
+	{
+		SceneModel.Transform = Transform.World;
+		base.InternalUpdate();
 	}
 	public enum SetupPhysicsMode
 	{
@@ -37,9 +36,9 @@ public class ModelEntity : Entity
 			foreach ( var mesh in part.Meshes ) PhysicsBody.AddShape( mesh, PhysicsBody.Transform.ToLocal( Transform.World ).ToWorld( part.Transform ), false );
 		}
 	}
-	protected override void OnDeleteInternal()
+	protected override void OnDestroyInternal()
 	{
-		base.OnDeleteInternal();
+		base.OnDestroyInternal();
 		SceneModel?.Delete();
 		PhysicsBody?.Remove();
 	}
